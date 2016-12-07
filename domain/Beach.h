@@ -4,6 +4,7 @@
 #include "enumeration/State.h"
 #include "enumeration/Difficulty.h"
 #include "enumeration/Player.h"
+#include "enumeration/CodeEndGame.h"
 
 using std::string;
 
@@ -12,6 +13,8 @@ public:
     Beach() : m_state(State::AVAILABLE), m_token("c") {}
 
     void newGameStarted(const Difficulty& difficulty, const Player& player);
+
+    void gameEnded(const string& gameID, Player winner, CodeEndGame codeEndGame);
 
 public:
     // STATE METHODS
@@ -37,6 +40,10 @@ public:
     }
 
     void generateNewGameID();
+
+    bool isKnownGameID(string gameID) const {
+        return m_gameID == gameID;
+    }
 
     string getGameID() const {
         return m_gameID;

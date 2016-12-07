@@ -19,6 +19,8 @@ using Net::Rest::Request;
 using Net::Http::ResponseWriter;
 using Net::Http::Code;
 
+using std::string;
+
 using namespace rapidjson;
 
 class AIHandler {
@@ -46,12 +48,17 @@ public:
 
 private:
     void setupRoutes() {
-        Post(m_router, "/ai/status", Net::Rest::Routes::bind(&AIHandler::statusPost, this));
-        Post(m_router, "/ai/games/start", Net::Rest::Routes::bind(&AIHandler::gameStartPost, this));
+        Post(m_router, "/ai/status",
+             Net::Rest::Routes::bind(&AIHandler::statusPost, this));
+        Post(m_router, "/ai/games/start",
+             Net::Rest::Routes::bind(&AIHandler::gameStartPost, this));
+
+        Post(m_router, "/ai/games/end/:gameid",
+             Net::Rest::Routes::bind(&AIHandler::gameEndPost, this));
     }
 
     void statusPost(const Request& request, ResponseWriter response) {
-        std::string body = request.body();
+        string body = request.body();
         Document doc;
         doc.Parse(body.c_str());
 
@@ -71,7 +78,7 @@ private:
     }
 
     void gameStartPost(const Request& request, ResponseWriter response) {
-        std::string body = request.body();
+        string body = request.body();
         Document doc;
         doc.Parse(body.c_str());
 
@@ -92,13 +99,51 @@ private:
             Difficulty difficulty = Difficulty::getFromString(difficultyValue.GetString());
             Player player = Player::getFromString(playerValue.GetString());
             m_beach.newGameStarted(difficulty, player);
-        } catch (std::string& exc) {
+        } catch (string& exc) {
             response.send(Code::Internal_Server_Error, exc);
             return;
         }
 
         NewGameDTO newGameDTO(m_beach.getState(), m_beach.getToken(), m_beach.getGameID());
         response.send(Code::Ok, newGameDTO.toJSON());
+    }
+
+    void gameEndPost(const Request& request, ResponseWriter response) {
+        auto gameID = request.param(":gameid").as<string>();
+        if (!m_beach.isKnownGameID(gameID)) {
+            response.send(Code::Bad_Request, "invalid argument");
+            return;
+        }
+
+        string body = request.body();
+        Document doc;
+        doc.Parse(body.c_str());
+
+        if (!doc.HasMember("token") || !doc.HasMember("winner")
+            || !doc.HasMember("code")) {
+            response.send(Code::Bad_Request, "invalid argument");
+            return;
+        }
+
+        Value& tokenValue = doc["token"];
+        if (!m_beach.isGoodToken(tokenValue.GetString())) {
+            response.send(Code::Unauthorized, "invalid token");
+            return;
+        }
+
+        Value& winnerValue = doc["winner"];
+        Value& codeValue = doc["code"];
+        try {
+            Player winner = Player::getFromString(winnerValue.GetString());
+            CodeEndGame codeEndGame = CodeEndGame::getFromString(codeValue.GetString());
+            m_beach.gameEnded(gameID, winner, codeEndGame);
+        } catch (string& exc) {
+            response.send(Code::Internal_Server_Error, exc);
+            return;
+        }
+
+        StatusDTO statusDTO(m_beach.getState(), m_beach.getToken());
+        response.send(Code::Ok, statusDTO.toJSON());
     }
 
 private:
