@@ -10,24 +10,24 @@ using std::time;
 using std::srand;
 using std::size_t;
 
-class randomTextGenerator
+class RandomTextGenerator
 {
 public:
-    static randomTextGenerator& getInstance()
+    static RandomTextGenerator& getInstance()
     {
-        static randomTextGenerator instance;
+        static RandomTextGenerator instance;
         return instance;
     }
 
 public:
-    randomTextGenerator(const string& str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+    RandomTextGenerator(const string& str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
             : m_str(str)
     {
         srand(time(NULL));
     }
 
-    randomTextGenerator(randomTextGenerator const&) = delete;
-    void operator=(randomTextGenerator const&) = delete;
+    RandomTextGenerator(RandomTextGenerator const&) = delete;
+    void operator=(RandomTextGenerator const&) = delete;
     
     string operator()(size_t len = 1)
     {

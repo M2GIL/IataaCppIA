@@ -7,9 +7,11 @@
 #include "../domain/Beach.h"
 #include "../DTO/StatusDTO.h"
 #include "../DTO/NewGameDTO.h"
+#include "../DTO/MoveDTO.h"
 
 #include <memory>
 #include <iostream>
+#include <array>
 
 using Net::Http::Endpoint;
 using Net::Tcp::Options;
@@ -20,6 +22,7 @@ using Net::Http::ResponseWriter;
 using Net::Http::Code;
 
 using std::string;
+using std::array;
 
 using namespace rapidjson;
 
@@ -52,99 +55,19 @@ private:
              Net::Rest::Routes::bind(&AIHandler::statusPost, this));
         Post(m_router, "/ai/games/start",
              Net::Rest::Routes::bind(&AIHandler::gameStartPost, this));
-
+        Post(m_router, "/ai/games/play/:gameid",
+             Net::Rest::Routes::bind(&AIHandler::gamePlayPost, this));
         Post(m_router, "/ai/games/end/:gameid",
              Net::Rest::Routes::bind(&AIHandler::gameEndPost, this));
     }
 
-    void statusPost(const Request& request, ResponseWriter response) {
-        string body = request.body();
-        Document doc;
-        doc.Parse(body.c_str());
+    void statusPost(const Request& request, ResponseWriter response);
 
-        if (!doc.HasMember("token")) {
-            response.send(Code::Bad_Request, "invalid argument");
-            return;
-        }
+    void gameStartPost(const Request& request, ResponseWriter response);
 
-        Value& tokenValue = doc["token"];
-        if (!m_beach.isGoodToken(tokenValue.GetString())) {
-            response.send(Code::Unauthorized, "invalid token");
-            return;
-        }
+    void gamePlayPost(const Request& request, ResponseWriter response);
 
-        StatusDTO statusDTO(m_beach.getState(), m_beach.getToken());
-        response.send(Code::Ok, statusDTO.toJSON());
-    }
-
-    void gameStartPost(const Request& request, ResponseWriter response) {
-        string body = request.body();
-        Document doc;
-        doc.Parse(body.c_str());
-
-        if (!doc.HasMember("token") || !doc.HasMember("difficulty") || !doc.HasMember("player")) {
-            response.send(Code::Bad_Request, "invalid argument");
-            return;
-        }
-
-        Value& tokenValue = doc["token"];
-        if (!m_beach.isGoodToken(tokenValue.GetString())) {
-            response.send(Code::Unauthorized, "invalid token");
-            return;
-        }
-
-        Value& difficultyValue = doc["difficulty"];
-        Value& playerValue = doc["player"];
-        try {
-            Difficulty difficulty = Difficulty::getFromString(difficultyValue.GetString());
-            Player player = Player::getFromString(playerValue.GetString());
-            m_beach.newGameStarted(difficulty, player);
-        } catch (string& exc) {
-            response.send(Code::Internal_Server_Error, exc);
-            return;
-        }
-
-        NewGameDTO newGameDTO(m_beach.getState(), m_beach.getToken(), m_beach.getGameID());
-        response.send(Code::Ok, newGameDTO.toJSON());
-    }
-
-    void gameEndPost(const Request& request, ResponseWriter response) {
-        auto gameID = request.param(":gameid").as<string>();
-        if (!m_beach.isKnownGameID(gameID)) {
-            response.send(Code::Bad_Request, "invalid argument");
-            return;
-        }
-
-        string body = request.body();
-        Document doc;
-        doc.Parse(body.c_str());
-
-        if (!doc.HasMember("token") || !doc.HasMember("winner")
-            || !doc.HasMember("code")) {
-            response.send(Code::Bad_Request, "invalid argument");
-            return;
-        }
-
-        Value& tokenValue = doc["token"];
-        if (!m_beach.isGoodToken(tokenValue.GetString())) {
-            response.send(Code::Unauthorized, "invalid token");
-            return;
-        }
-
-        Value& winnerValue = doc["winner"];
-        Value& codeValue = doc["code"];
-        try {
-            Player winner = Player::getFromString(winnerValue.GetString());
-            CodeEndGame codeEndGame = CodeEndGame::getFromString(codeValue.GetString());
-            m_beach.gameEnded(gameID, winner, codeEndGame);
-        } catch (string& exc) {
-            response.send(Code::Internal_Server_Error, exc);
-            return;
-        }
-
-        StatusDTO statusDTO(m_beach.getState(), m_beach.getToken());
-        response.send(Code::Ok, statusDTO.toJSON());
-    }
+    void gameEndPost(const Request& request, ResponseWriter response);
 
 private:
     std::shared_ptr<Endpoint> m_server;

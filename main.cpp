@@ -5,10 +5,11 @@
 using Net::Address;
 
 int main() {
-    Address addr(Net::Ipv4::any(), Net::Port(9080));
+    Address addr("127.0.0.1", Net::Port(9080));
     AIHandler ch(addr);
     ch.init();
     ch.start();
+    ch.shutdown();
 
     return 0;
 }

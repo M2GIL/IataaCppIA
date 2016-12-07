@@ -5,16 +5,21 @@
 #include "enumeration/Difficulty.h"
 #include "enumeration/Player.h"
 #include "enumeration/CodeEndGame.h"
+#include <array>
 
 using std::string;
+using std::array;
 
 class Beach {
 public:
     Beach() : m_state(State::AVAILABLE), m_token("c") {}
 
-    void newGameStarted(const Difficulty& difficulty, const Player& player);
+    void newGameStarted(const Difficulty&, const Player&);
 
-    void gameEnded(const string& gameID, Player winner, CodeEndGame codeEndGame);
+    array<char, 50> gamePlay(const string&, const Difficulty&, const Player&,
+                             const array<char, 50>&);
+
+    void gameEnded(const string&, const Player&, const CodeEndGame&);
 
 public:
     // STATE METHODS
