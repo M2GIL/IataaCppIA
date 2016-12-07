@@ -1,9 +1,9 @@
 #ifndef CHECKERS_REST_IA_C_BEACH_H
 #define CHECKERS_REST_IA_C_BEACH_H
 
-#include "State.h"
-#include "Difficulty.h"
-#include "Player.h"
+#include "enumeration/State.h"
+#include "enumeration/Difficulty.h"
+#include "enumeration/Player.h"
 
 using std::string;
 

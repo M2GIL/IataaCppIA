@@ -3,7 +3,7 @@
 
 #include "AbstractDTO.h"
 #include "StatusDTO.h"
-#include "../domain/State.h"
+#include "../domain/enumeration/State.h"
 
 using std::string;
 

@@ -2,7 +2,7 @@
 #define CHECKERS_REST_IA_C_STATUSDTO_H
 
 #include "AbstractDTO.h"
-#include "../domain/State.h"
+#include "../domain/enumeration/State.h"
 
 using std::string;
 
