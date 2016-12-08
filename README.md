@@ -5,7 +5,9 @@ Greffon pour les IA pour se brancher à un serveur IAtaa.
 ## Structures de données
 
 Des structures de données sont prévues pour les échanges entre la plateforme
-et l'IA. Elles suivent les conventions suivantes :
+et l'IA.  
+
+Elles suivent les conventions suivantes :
 
     PLAYER {
       J1, // PLAYER 1, blanc
