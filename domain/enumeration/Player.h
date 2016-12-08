@@ -21,7 +21,7 @@ namespace Domain {
              * @return a Player
              * @throw a string if conversion is impossible
              */
-            static Player getFromString(const string &str) {
+            static Player getFromString(const string& str) {
                 if (WHITE.m_toString == str) {
                     return WHITE;
                 } else if (BLACK.m_toString == str) {

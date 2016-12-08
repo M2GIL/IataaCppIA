@@ -18,7 +18,7 @@ namespace Domain {
              * @return a Difficulty
              * @throw a string if conversion is impossible
              */
-            static Difficulty getFromString(const string &str) {
+            static Difficulty getFromString(const string& str) {
                 if (EASY.m_toString == str) {
                     return EASY;
                 } else if (MEDIUM.m_toString == str) {

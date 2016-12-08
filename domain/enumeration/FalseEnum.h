@@ -22,7 +22,7 @@ namespace Domain {
                 return m_toString;
             };
 
-            bool operator==(const FalseEnum &s1) {
+            bool operator==(const FalseEnum& s1) {
                 return m_toString == s1.m_toString;
             }
 

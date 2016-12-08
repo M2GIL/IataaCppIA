@@ -19,7 +19,7 @@ namespace Dto {
         virtual ~NewGameDTO() {}
 
     public:
-        virtual void serialize(PrettyWriter<StringBuffer> &writer) const;
+        virtual void serialize(PrettyWriter<StringBuffer>&) const;
 
     private:
         /**

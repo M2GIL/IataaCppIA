@@ -28,20 +28,20 @@ namespace Domain {
         /**
          * Indicates that a new game started.
          */
-        void newGameStarted(const Difficulty &, const Player &);
+        void newGameStarted(const Difficulty&, const Player&);
 
         /**
          * Indicates that we need a new move.
          * @return the calculated move
          */
         vector<BoardSquareType>
-        gamePlay(const string &, const Difficulty &, const Player &,
-                 const vector<BoardSquareType> &);
+        gamePlay(const string&, const Difficulty&, const Player&,
+                 const vector<BoardSquareType>&);
 
         /**
          * Indicates that a game ended.
          */
-        void gameEnded(const string &, const Player &, const CodeEndGame &);
+        void gameEnded(const string&, const Player&, const CodeEndGame&);
 
     public:
         // STATE METHODS

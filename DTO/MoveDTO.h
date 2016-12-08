@@ -32,7 +32,7 @@ namespace Dto {
         virtual ~MoveDTO() {}
 
     public:
-        virtual void serialize(PrettyWriter<StringBuffer> &writer) const;
+        virtual void serialize(PrettyWriter<StringBuffer>&) const;
 
     private:
         /**

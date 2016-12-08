@@ -25,7 +25,7 @@ namespace Dto {
         /**
          * Transforms the object to JSON.
          */
-        virtual void serialize(PrettyWriter<StringBuffer> &) const = 0;
+        virtual void serialize(PrettyWriter<StringBuffer>&) const = 0;
     };
 }
 

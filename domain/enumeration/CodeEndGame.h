@@ -18,7 +18,7 @@ namespace Domain {
              * @return a CodeEndGame
              * @throw a string if conversion is impossible
              */
-            static CodeEndGame getFromString(const string &str) {
+            static CodeEndGame getFromString(const string& str) {
                 if (TIMEOUT.m_toString == str) {
                     return TIMEOUT;
                 } else if (SURRENDER.m_toString == str) {
