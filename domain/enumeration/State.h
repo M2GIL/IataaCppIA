@@ -3,13 +3,20 @@
 
 #include "FalseEnum.h"
 
-class State : public FalseEnum {
-public:
-    static const State BUSY;
-    static const State AVAILABLE;
+namespace Domain {
+    namespace Enumeration {
+        /**
+         * Describes a status.
+         */
+        class State : public FalseEnum {
+        public:
+            static const State BUSY;
+            static const State AVAILABLE;
 
-private:
-    State(string s) : FalseEnum(s) {}
-};
+        private:
+            State(string s) : FalseEnum(s) {}
+        };
+    }
+}
 
 #endif

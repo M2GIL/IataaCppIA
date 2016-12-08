@@ -4,26 +4,34 @@
 #include "AbstractDTO.h"
 #include "../domain/enumeration/State.h"
 
+using Domain::Enumeration::State;
 using std::string;
 
-class StatusDTO : public AbstractDTO {
-public:
-    StatusDTO(State state, string token)
-            : m_state(state), m_token(token) {}
+namespace Dto {
+    /**
+     * Encapsulates a token and a status.
+     */
+    class StatusDTO : public AbstractDTO {
+    public:
+        StatusDTO(State state, string token)
+                : m_state(state), m_token(token) {}
 
-    virtual ~StatusDTO() {}
+        virtual ~StatusDTO() {}
 
-public:
-    virtual void serialize(PrettyWriter<StringBuffer>& writer) const {
-        writer.String("token");
-        writer.String(m_token.c_str());
-        writer.String("status");
-        writer.String(m_state.toString().c_str());
-    }
+    public:
+        virtual void serialize(PrettyWriter<StringBuffer>& writer) const;
 
-private:
-    State m_state;
-    string m_token;
-};
+    private:
+        /**
+         * Token.
+         */
+        string m_token;
+
+        /**
+         * Status.
+         */
+        State m_state;
+    };
+}
 
 #endif

@@ -5,23 +5,34 @@
 
 using std::string;
 
-class FalseEnum {
-public:
-    virtual ~FalseEnum() {}
+namespace Domain {
+    namespace Enumeration {
+        /**
+         * Super class of Java-style enumerations.
+         */
+        class FalseEnum {
+        public:
+            virtual ~FalseEnum() {}
 
-    string toString() const {
-        return m_toString;
-    };
+            /**
+             * Converts the enumeration to string.
+             * @return string value of the enumeration
+             */
+            string toString() const {
+                return m_toString;
+            };
 
-    bool operator==(const FalseEnum& s1) {
-        return m_toString == s1.m_toString;
+            bool operator==(const FalseEnum &s1) {
+                return m_toString == s1.m_toString;
+            }
+
+        protected:
+            FalseEnum(string s) : m_toString(s) {}
+
+        protected:
+            string m_toString;
+        };
     }
-
-protected:
-    FalseEnum(string s) : m_toString(s) {}
-
-protected:
-    string m_toString;
-};
+}
 
 #endif

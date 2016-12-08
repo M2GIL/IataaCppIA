@@ -5,45 +5,56 @@
 #include "../domain/enumeration/State.h"
 #include "../domain/enumeration/Difficulty.h"
 #include "../domain/enumeration/Player.h"
+#include "../domain/enumeration/BoardSquareType.h"
 
 #include <iostream>
 
-#include <array>
+#include <vector>
 
+using Domain::Enumeration::State;
+using Domain::Enumeration::BoardSquareType;
+using Domain::Enumeration::Difficulty;
+using Domain::Enumeration::Player;
 using std::string;
-using std::array;
+using std::vector;
 
-class MoveDTO : public AbstractDTO {
-public:
-    MoveDTO(string token, Difficulty difficulty, Player player,
-            array<char, 50>& board)
-            : m_token(token), m_difficulty(difficulty), m_player(player),
-              m_board(board) {}
+namespace Dto {
+/**
+ * Encapsulates a new move response.
+ */
+    class MoveDTO : public AbstractDTO {
+    public:
+        MoveDTO(string token, Difficulty difficulty, Player player,
+                vector<BoardSquareType> &board)
+                : m_token(token), m_difficulty(difficulty), m_player(player),
+                  m_board(board) {}
 
-    virtual ~MoveDTO() {}
+        virtual ~MoveDTO() {}
 
-public:
-    virtual void serialize(PrettyWriter<StringBuffer>& writer) const {
-        writer.String("token");
-        writer.String(m_token.c_str());
-        writer.String("difficulty");
-        writer.String(m_difficulty.toString().c_str());
-        writer.String("player");
-        writer.String(m_player.toString().c_str());
-        writer.String("board");
-        writer.StartArray();
-        for (const char& c : m_board) {
-            string s(1, c);
-            writer.String(s.c_str());
-        }
-        writer.EndArray();
-    }
+    public:
+        virtual void serialize(PrettyWriter<StringBuffer> &writer) const;
 
-private:
-    string m_token;
-    Difficulty m_difficulty;
-    Player m_player;
-    array<char, 50> m_board;
-};
+    private:
+        /**
+         * Token.
+         */
+        string m_token;
+
+        /**
+         * Difficulty.
+         */
+        Difficulty m_difficulty;
+
+        /**
+         * Player.
+         */
+        Player m_player;
+
+        /**
+         * Board.
+         */
+        vector<BoardSquareType> m_board;
+    };
+}
 
 #endif

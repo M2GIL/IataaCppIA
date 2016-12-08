@@ -1,17 +1,32 @@
 #include "Converter.h"
 
-void Converter::convertToInternalFormat(const array<char, 50>& board) {
-    // Convert from a 50-char array to internal format.
-    /// Change return type from void to internal format.
-}
+namespace Domain {
+    namespace Tool {
+        void /* InternalFormat */ Converter::convertToInternalFormat(
+                const vector<BoardSquareType> &board) {
+            /// Change return type from void to internal format.
+            /// Write function to convert board to your format.
 
-array<char, 50> Converter::convertToExternalFormat() {
-    // Convert from internal format to a 50-char array.
-    /// Take as parameter a const reference to internal format.
+            // Example :
+            // InternalFormat iF;
+            // for (int i = 0; i < board.size(); ++i) {
+            //    iF.setSquare(i, board[i]);
+            // }
+            // return iF;
+        }
 
-    array<char, 50> a;
-    for (int i = 0; i < 50; ++i) {
-        a[i] = '1';
+        vector<BoardSquareType>
+        Converter::convertToExternalFormat(/* const InternalFormat& iF */) {
+            /// Take as parameter a const reference to internal format.
+            /// Write a function to convert the board from your format to
+            /// BoardSquareType format.
+
+            // Example (white draughts everywhere) :
+            vector<BoardSquareType> a;
+            for (int i = 0; i < 50; ++i) {
+                a.push_back(BoardSquareType::WHITE_DRAUGHT);
+            }
+            return a;
+        }
     }
-    return a;
 }

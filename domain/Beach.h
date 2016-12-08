@@ -5,59 +5,106 @@
 #include "enumeration/Difficulty.h"
 #include "enumeration/Player.h"
 #include "enumeration/CodeEndGame.h"
-#include <array>
+#include "enumeration/BoardSquareType.h"
+#include <vector>
 
+using Domain::Enumeration::CodeEndGame;
+using Domain::Enumeration::BoardSquareType;
+using Domain::Enumeration::Difficulty;
+using Domain::Enumeration::Player;
+using Domain::Enumeration::State;
 using std::string;
-using std::array;
+using std::vector;
 
-class Beach {
-public:
-    Beach() : m_state(State::AVAILABLE), m_token("c") {}
+namespace Domain {
+    /**
+     * Interface between REST services and AI implementation.
+     */
+    class Beach {
+    public:
+        Beach() : m_state(State::AVAILABLE), m_token("c") {}
 
-    void newGameStarted(const Difficulty&, const Player&);
+        // INDICATORS METHODS
+        /**
+         * Indicates that a new game started.
+         */
+        void newGameStarted(const Difficulty &, const Player &);
 
-    array<char, 50> gamePlay(const string&, const Difficulty&, const Player&,
-                             const array<char, 50>&);
+        /**
+         * Indicates that we need a new move.
+         * @return the calculated move
+         */
+        vector<BoardSquareType>
+        gamePlay(const string &, const Difficulty &, const Player &,
+                 const vector<BoardSquareType> &);
 
-    void gameEnded(const string&, const Player&, const CodeEndGame&);
+        /**
+         * Indicates that a game ended.
+         */
+        void gameEnded(const string &, const Player &, const CodeEndGame &);
 
-public:
-    // STATE METHODS
+    public:
+        // STATE METHODS
+        /**
+         * Toggles the state between AVAILABLE and BUSY.
+         */
+        void toggleState() {
+            m_state = (m_state == State::AVAILABLE ? State::BUSY
+                                                   : State::AVAILABLE);
+        }
 
-    void toggleState() {
-        m_state = (m_state == State::AVAILABLE ? State::BUSY : State::AVAILABLE);
-    }
+        State getState() const {
+            return m_state;
+        }
 
-    State getState() const {
-        return m_state;
-    }
+        void setToken(string token) {
+            m_token = token;
+        }
 
-    void setToken(string token) {
-        m_token = token;
-    }
+        /**
+         * Verifies the token.
+         * @param token the token
+         * @return true if token is valid, false otherwise
+         */
+        bool isGoodToken(string token) const {
+            return m_token == token;
+        }
 
-    bool isGoodToken(string token) const {
-        return m_token == token;
-    }
+        string getToken() const {
+            return m_token;
+        }
 
-    string getToken() const {
-        return m_token;
-    }
+        void generateNewGameID();
 
-    void generateNewGameID();
+        /**
+         * Verifies the gameID.
+         * @param gameID the gameID
+         * @return true if gameID is recognized, false otherwise
+         */
+        bool isKnownGameID(string gameID) const {
+            return m_gameID == gameID;
+        }
 
-    bool isKnownGameID(string gameID) const {
-        return m_gameID == gameID;
-    }
+        string getGameID() const {
+            return m_gameID;
+        }
 
-    string getGameID() const {
-        return m_gameID;
-    }
+    private:
+        /**
+         * The token.
+         */
+        string m_token;
 
-private:
-    State m_state;
-    string m_token;
-    string m_gameID;
-};
+        /**
+         * The status of the system.
+         */
+        State m_state;
+
+        /**
+         * THe gameID.
+         */
+        string m_gameID;
+    };
+}
 
 #endif
