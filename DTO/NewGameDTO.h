@@ -3,7 +3,7 @@
 
 #include "AbstractDTO.h"
 #include "StatusDTO.h"
-#include "../domain/enumeration/State.h"
+#include "../domain/enumeration/Status.h"
 
 using std::string;
 
@@ -13,7 +13,7 @@ namespace Dto {
  */
     class NewGameDTO : public AbstractDTO {
     public:
-        NewGameDTO(State state, string token, string gameID)
+        NewGameDTO(Status state, string token, string gameID)
                 : m_statusDTO(state, token), m_gameID(gameID) {}
 
         virtual ~NewGameDTO() {}

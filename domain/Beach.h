@@ -1,7 +1,7 @@
 #ifndef CHECKERS_REST_IA_C_BEACH_H
 #define CHECKERS_REST_IA_C_BEACH_H
 
-#include "enumeration/State.h"
+#include "enumeration/Status.h"
 #include "enumeration/Difficulty.h"
 #include "enumeration/Player.h"
 #include "enumeration/CodeEndGame.h"
@@ -12,7 +12,7 @@ using Domain::Enumeration::CodeEndGame;
 using Domain::Enumeration::BoardSquareType;
 using Domain::Enumeration::Difficulty;
 using Domain::Enumeration::Player;
-using Domain::Enumeration::State;
+using Domain::Enumeration::Status;
 using std::string;
 using std::vector;
 
@@ -22,7 +22,7 @@ namespace Domain {
      */
     class Beach {
     public:
-        Beach() : m_state(State::AVAILABLE), m_token("c") {}
+        Beach() : m_state(Status::AVAILABLE), m_token("c") {}
 
         // INDICATORS METHODS
         /**
@@ -49,11 +49,11 @@ namespace Domain {
          * Toggles the state between AVAILABLE and BUSY.
          */
         void toggleState() {
-            m_state = (m_state == State::AVAILABLE ? State::BUSY
-                                                   : State::AVAILABLE);
+            m_state = (m_state == Status::AVAILABLE ? Status::BUSY
+                                                   : Status::AVAILABLE);
         }
 
-        State getState() const {
+        Status getState() const {
             return m_state;
         }
 
@@ -98,7 +98,7 @@ namespace Domain {
         /**
          * The status of the system.
          */
-        State m_state;
+        Status m_state;
 
         /**
          * THe gameID.

@@ -2,9 +2,9 @@
 #define CHECKERS_REST_IA_C_STATUSDTO_H
 
 #include "AbstractDTO.h"
-#include "../domain/enumeration/State.h"
+#include "../domain/enumeration/Status.h"
 
-using Domain::Enumeration::State;
+using Domain::Enumeration::Status;
 using std::string;
 
 namespace Dto {
@@ -13,7 +13,7 @@ namespace Dto {
      */
     class StatusDTO : public AbstractDTO {
     public:
-        StatusDTO(State state, string token)
+        StatusDTO(Status state, string token)
                 : m_state(state), m_token(token) {}
 
         virtual ~StatusDTO() {}
@@ -30,7 +30,7 @@ namespace Dto {
         /**
          * Status.
          */
-        State m_state;
+        Status m_state;
     };
 }
 

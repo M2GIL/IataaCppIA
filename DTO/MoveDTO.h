@@ -2,7 +2,7 @@
 #define IATAA_C_MOVEDTO_H
 
 #include "AbstractDTO.h"
-#include "../domain/enumeration/State.h"
+#include "../domain/enumeration/Status.h"
 #include "../domain/enumeration/Difficulty.h"
 #include "../domain/enumeration/Player.h"
 #include "../domain/enumeration/BoardSquareType.h"
@@ -11,7 +11,7 @@
 
 #include <vector>
 
-using Domain::Enumeration::State;
+using Domain::Enumeration::Status;
 using Domain::Enumeration::BoardSquareType;
 using Domain::Enumeration::Difficulty;
 using Domain::Enumeration::Player;

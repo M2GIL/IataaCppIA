@@ -8,13 +8,13 @@ namespace Domain {
         /**
          * Describes a status.
          */
-        class State : public FalseEnum {
+        class Status : public FalseEnum {
         public:
-            static const State BUSY;
-            static const State AVAILABLE;
+            static const Status BUSY;
+            static const Status AVAILABLE;
 
         private:
-            State(string s) : FalseEnum(s) {}
+            Status(string s) : FalseEnum(s) {}
         };
     }
 }
