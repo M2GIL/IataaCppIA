@@ -23,7 +23,6 @@ using namespace rapidjson;
 
 class AIHandler {
 public:
-
     AIHandler(Net::Address addr) : m_server(std::make_shared<Endpoint>(addr)) {
     }
 
@@ -42,6 +41,10 @@ public:
 
     void shutdown() {
         m_server->shutdown();
+    }
+
+    Beach& getBeach() {
+        return m_beach;
     }
 
 private:

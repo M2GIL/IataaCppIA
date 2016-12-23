@@ -9,7 +9,7 @@ using std::string;
 
 class Beach {
 public:
-    Beach() : m_state(State::AVAILABLE), m_token("c") {}
+    Beach() : m_state(State::AVAILABLE), m_token("") {}
 
     void newGameStarted(const Difficulty& difficulty, const Player& player);
 
