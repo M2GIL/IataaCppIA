@@ -2,28 +2,36 @@
 #define CHECKERS_REST_IA_C_STATUSDTO_H
 
 #include "AbstractDTO.h"
-#include "../domain/State.h"
+#include "../domain/enumeration/Status.h"
 
+using Domain::Enumeration::Status;
 using std::string;
 
-class StatusDTO : public AbstractDTO {
-public:
-    StatusDTO(State state, string token)
-            : m_state(state), m_token(token) {}
+namespace Dto {
+    /**
+     * Encapsulates a token and a status.
+     */
+    class StatusDTO : public AbstractDTO {
+    public:
+        StatusDTO(Status state, string token)
+                : m_state(state), m_token(token) {}
 
-    virtual ~StatusDTO() {}
+        virtual ~StatusDTO() {}
 
-public:
-    virtual void serialize(PrettyWriter<StringBuffer>& writer) const {
-        writer.String("token");
-        writer.String(m_token.c_str());
-        writer.String("status");
-        writer.String(m_state.toString().c_str());
-    }
+    public:
+        virtual void serialize(PrettyWriter<StringBuffer>&) const;
 
-private:
-    State m_state;
-    string m_token;
-};
+    private:
+        /**
+         * Token.
+         */
+        string m_token;
+
+        /**
+         * Status.
+         */
+        Status m_state;
+    };
+}
 
 #endif

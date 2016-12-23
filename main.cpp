@@ -28,8 +28,9 @@ int main(int argc, char** argv) {
     // Set token from file.
     ch.getBeach().setToken(getTokenFromFile("token"));
 
-    ch.init();
+    ch.init(3);
     ch.start();
+    ch.shutdown();
 
     return 0;
 }

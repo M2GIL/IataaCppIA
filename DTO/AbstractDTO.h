@@ -8,14 +8,25 @@
 using namespace rapidjson;
 using std::string;
 
-class AbstractDTO {
-public:
-    virtual ~AbstractDTO() {}
+namespace Dto {
+/**
+ * An abstracton for all DTO.
+ */
+    class AbstractDTO {
+    public:
+        virtual ~AbstractDTO() {}
 
-    virtual string toJSON() const;
+        /**
+         * @return the JSON form of the object
+         */
+        virtual string toJSON() const;
 
-public:
-    virtual void serialize(PrettyWriter<StringBuffer>&) const = 0;
-};
+    public:
+        /**
+         * Transforms the object to JSON.
+         */
+        virtual void serialize(PrettyWriter<StringBuffer>&) const = 0;
+    };
+}
 
 #endif

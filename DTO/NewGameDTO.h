@@ -3,27 +3,35 @@
 
 #include "AbstractDTO.h"
 #include "StatusDTO.h"
-#include "../domain/State.h"
+#include "../domain/enumeration/Status.h"
 
 using std::string;
 
-class NewGameDTO : public AbstractDTO {
-public:
-    NewGameDTO(State state, string token, string gameID)
-            : m_statusDTO(state, token), m_gameID(gameID) {}
+namespace Dto {
+/**
+ * Encapsulates a new game response.
+ */
+    class NewGameDTO : public AbstractDTO {
+    public:
+        NewGameDTO(Status state, string token, string gameID)
+                : m_statusDTO(state, token), m_gameID(gameID) {}
 
-    virtual ~NewGameDTO() {}
+        virtual ~NewGameDTO() {}
 
-public:
-    virtual void serialize(PrettyWriter<StringBuffer>& writer) const {
-        m_statusDTO.serialize(writer);
-        writer.String("game_id");
-        writer.String(m_gameID.c_str());
-    }
+    public:
+        virtual void serialize(PrettyWriter<StringBuffer>&) const;
 
-private:
-    StatusDTO m_statusDTO;
-    string m_gameID;
-};
+    private:
+        /**
+         * Status.
+         */
+        StatusDTO m_statusDTO;
+
+        /**
+         * GameID.
+         */
+        string m_gameID;
+    };
+}
 
 #endif

@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.6)
-project(checkers_rest_ia_c)
+project(iataa_c++)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp domain/State.h domain/Beach.cpp domain/Beach.h domain/State.cpp DTO/AbstractDTO.h DTO/StatusDTO.h DTO/AbstractDTO.cpp domain/tools/randomTextGenerator.h domain/FalseEnum.h domain/Difficulty.cpp domain/Difficulty.h domain/Player.cpp domain/Player.h)
-add_executable(checkers_rest_ia_c ${SOURCE_FILES})
-target_link_libraries(checkers_rest_ia_c net_static pthread)
+set(SOURCE_FILES main.cpp domain/enumeration/Status.h domain/Beach.cpp domain/Beach.h domain/enumeration/Status.cpp DTO/AbstractDTO.h DTO/StatusDTO.h DTO/AbstractDTO.cpp domain/tools/RandomTextGenerator.h domain/enumeration/FalseEnum.h domain/enumeration/Difficulty.cpp domain/enumeration/Difficulty.h domain/enumeration/Player.cpp domain/enumeration/Player.h domain/enumeration/CodeEndGame.cpp domain/enumeration/CodeEndGame.h domain/enumeration/BoardSquareType.cpp domain/enumeration/BoardSquareType.h domain/tools/Converter.cpp domain/tools/Converter.h DTO/MoveDTO.h REST/AIHandler.cpp DTO/MoveDTO.cpp DTO/NewGameDTO.cpp DTO/StatusDTO.cpp)
+add_executable(iataa_c++ ${SOURCE_FILES})
+target_link_libraries(iataa_c++ net_static pthread)
