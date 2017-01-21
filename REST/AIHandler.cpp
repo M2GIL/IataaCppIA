@@ -21,6 +21,7 @@ using namespace rapidjson;
  * Gets the status of the system.
  */
 void AIHandler::statusGet(const Request &request, ResponseWriter response) {
+    std::cout << "---" << std::endl;
     std::cout << "Status request received." << std::endl;
 
     auto query = request.query();
@@ -54,6 +55,7 @@ void AIHandler::statusGet(const Request &request, ResponseWriter response) {
  * Indicates a new game to the system.
  */
 void AIHandler::gameStartGet(const Request &request, ResponseWriter response) {
+    std::cout << "---" << std::endl;
     std::cout << "Game start request received." << std::endl;
 
     auto query = request.query();
@@ -88,6 +90,11 @@ void AIHandler::gameStartGet(const Request &request, ResponseWriter response) {
         // Indicates a new game to the system.
         m_beach.newGameStarted(difficulty, player);
     } catch (string& exc) {
+        std::cerr << exc << std::endl;
+        response.send(Code::Internal_Server_Error, exc);
+        return;
+    } catch (const char* exc) {
+        std::cerr << exc << std::endl;
         response.send(Code::Internal_Server_Error, exc);
         return;
     }
@@ -102,6 +109,7 @@ void AIHandler::gameStartGet(const Request &request, ResponseWriter response) {
  * Asks a new move to the system.
  */
 void AIHandler::gamePlayGet(const Request &request, ResponseWriter response) {
+    std::cout << "---" << std::endl;
     std::cout << "Game play request received." << std::endl;
     // Gets and checks the gameID.
     auto gameID = request.param(":gameid").as<string>();
@@ -111,9 +119,6 @@ void AIHandler::gamePlayGet(const Request &request, ResponseWriter response) {
         return;
     }
     std::cout << "Known gameID." << std::endl;
-
-
-
 
     auto query = request.query();
     // Get and check token.
@@ -168,6 +173,11 @@ void AIHandler::gamePlayGet(const Request &request, ResponseWriter response) {
         response.setMime(MIME(Application, Json));
         response.send(Code::Ok, moveDTO.toJSON());
     } catch (string& exc) {
+        std::cerr << exc << std::endl;
+        response.send(Code::Internal_Server_Error, exc);
+        return;
+    } catch (const char* exc) {
+        std::cerr << exc << std::endl;
         response.send(Code::Internal_Server_Error, exc);
         return;
     }
@@ -177,6 +187,7 @@ void AIHandler::gamePlayGet(const Request &request, ResponseWriter response) {
  * Indicates end of a game to the system.
  */
 void AIHandler::gameEndGet(const Request &request, ResponseWriter response) {
+    std::cout << "---" << std::endl;
     std::cout << "Game end request received." << std::endl;
     // Gets and checks the gameID.
     auto gameID = request.param(":gameid").as<string>();
@@ -219,6 +230,11 @@ void AIHandler::gameEndGet(const Request &request, ResponseWriter response) {
         // Indicates to the system that a game ended.
         m_beach.gameEnded(gameID, winner, codeEndGame);
     } catch (string& exc) {
+        std::cerr << exc << std::endl;
+        response.send(Code::Internal_Server_Error, exc);
+        return;
+    } catch (const char* exc) {
+        std::cerr << exc << std::endl;
         response.send(Code::Internal_Server_Error, exc);
         return;
     }

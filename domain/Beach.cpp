@@ -2,6 +2,8 @@
 
 #include "tools/RandomTextGenerator.h"
 #include "tools/Converter.h"
+#include "../AI/Board.h"
+#include "../AI/AI.h"
 
 namespace Domain {
     void Beach::generateNewGameID() {
@@ -23,15 +25,39 @@ namespace Domain {
                     const vector<BoardSquareType> &board) {
         // Only if gameID is the good one.
         if (m_gameID == gameID) {
-            // TODO
             /// Conversion to internal format.
-            /* InternalFormat iF = */Tool::Converter::convertToInternalFormat(board);
+            Board b = Tool::Converter::convertToInternalFormat(board);
 
             /// AI reflection.
-            /* InternalFormat iaBoard = iF.think(player, difficulty);*/
+            // Get difficulty in good format.
+            AI::AIDifficulty aiDifficulty;
+            if (difficulty.toString() == Difficulty::EASY.toString()) {
+                aiDifficulty = AI::AIDifficulty::Easy;
+            } else if (difficulty.toString() == Difficulty::MEDIUM.toString()) {
+                aiDifficulty = AI::AIDifficulty::Medium;
+            } else if (difficulty.toString() == Difficulty::HARD.toString()) {
+                aiDifficulty = AI::AIDifficulty::Hard;
+            } else {
+                throw "Unable to check difficulty in gamePlay.";
+            }
+
+            // Get color in good format.
+            Board::Color color;
+            if (player.toString() == Player::BLACK.toString()) {
+                color = Board::Color::Black;
+            } else if (player.toString() == Player::WHITE.toString()) {
+                color = Board::Color::White;
+            } else {
+                throw "Unable to check color in gamePlay.";
+            }
+
+            // Launch AI.
+            AI ai(aiDifficulty);
+            Board iaBoard;
+            ai.thinkAboutNextMove(b, color, iaBoard);
 
             /// Conversion to external format.
-            return Tool::Converter::convertToExternalFormat(/*iaBoard*/);
+            return Tool::Converter::convertToExternalFormat(iaBoard);
         } else {
             throw "Unknown gameID : " + gameID;
         }
