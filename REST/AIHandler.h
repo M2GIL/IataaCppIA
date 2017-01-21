@@ -61,23 +61,23 @@ private:
      * Binds the routes to their implementations.
      */
     void setupRoutes() {
-        Post(m_router, "/ai/status",
-             Net::Rest::Routes::bind(&AIHandler::statusPost, this));
-        Post(m_router, "/ai/games/start",
-             Net::Rest::Routes::bind(&AIHandler::gameStartPost, this));
-        Post(m_router, "/ai/games/play/:gameid",
-             Net::Rest::Routes::bind(&AIHandler::gamePlayPost, this));
-        Post(m_router, "/ai/games/end/:gameid",
-             Net::Rest::Routes::bind(&AIHandler::gameEndPost, this));
+        Get(m_router, "/ai/status",
+             Net::Rest::Routes::bind(&AIHandler::statusGet, this));
+        Get(m_router, "/ai/games/start",
+             Net::Rest::Routes::bind(&AIHandler::gameStartGet, this));
+        Get(m_router, "/ai/games/play/:gameid",
+             Net::Rest::Routes::bind(&AIHandler::gamePlayGet, this));
+        Get(m_router, "/ai/games/end/:gameid",
+             Net::Rest::Routes::bind(&AIHandler::gameEndGet, this));
     }
 
-    void statusPost(const Request&, ResponseWriter);
+    void statusGet(const Request &, ResponseWriter);
 
-    void gameStartPost(const Request&, ResponseWriter);
+    void gameStartGet(const Request &, ResponseWriter);
 
-    void gamePlayPost(const Request&, ResponseWriter);
+    void gamePlayGet(const Request &, ResponseWriter);
 
-    void gameEndPost(const Request&, ResponseWriter);
+    void gameEndGet(const Request &, ResponseWriter);
 
 private:
     /**

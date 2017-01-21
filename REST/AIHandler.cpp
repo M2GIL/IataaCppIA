@@ -20,24 +20,29 @@ using namespace rapidjson;
 /**
  * Gets the status of the system.
  */
-void AIHandler::statusPost(const Request &request, ResponseWriter response) {
-    // Gets and parses the body of the request.
-    string body = request.body();
-    Document doc;
-    doc.Parse(body.c_str());
+void AIHandler::statusGet(const Request &request, ResponseWriter response) {
+    std::cout << "Status request received." << std::endl;
 
-    // Is token available ?
-    if (!doc.HasMember("token")) {
+    auto query = request.query();
+    // Check if request has token.
+    if (!query.has("token")) {
         response.send(Code::Bad_Request, "Invalid arguments.");
         return;
     }
 
-    // Is token the correct one ?
-    Value& tokenValue = doc["token"];
-    if (!m_beach.isGoodToken(tokenValue.GetString())) {
+    // Get and check token.
+    auto optionalToken = query.get("token");
+    if (optionalToken.isEmpty()) {
+        response.send(Code::Bad_Request, "Token is empty.");
+        return;
+    }
+    string token = optionalToken.get();
+    std::cout << "Token asked : " << token << std::endl;
+    if (!m_beach.isGoodToken(token)) {
         response.send(Code::Unauthorized, "Invalid token.");
         return;
     }
+    std::cout << "Token OK." << std::endl;
 
     // Returns the status.
     StatusDTO statusDTO(m_beach.getState(), m_beach.getToken());
@@ -48,31 +53,38 @@ void AIHandler::statusPost(const Request &request, ResponseWriter response) {
 /**
  * Indicates a new game to the system.
  */
-void AIHandler::gameStartPost(const Request &request, ResponseWriter response) {
-    // Gets and parses the body of the request.
-    string body = request.body();
-    Document doc;
-    doc.Parse(body.c_str());
+void AIHandler::gameStartGet(const Request &request, ResponseWriter response) {
+    std::cout << "Game start request received." << std::endl;
 
-    // We need a token, a difficulty and a player.
-    if (!doc.HasMember("token") || !doc.HasMember("difficulty") || !doc.HasMember("player")) {
-        response.send(Code::Bad_Request, "Invalid arguments.");
+    auto query = request.query();
+    // Get and check token.
+    auto optionalToken = query.get("token");
+    if (optionalToken.isEmpty()) {
+        response.send(Code::Bad_Request, "Token is empty.");
         return;
     }
-
-    // Is token the correct one ?
-    Value& tokenValue = doc["token"];
-    if (!m_beach.isGoodToken(tokenValue.GetString())) {
+    string token = optionalToken.get();
+    std::cout << "Token asked : " << token << std::endl;
+    if (!m_beach.isGoodToken(token)) {
         response.send(Code::Unauthorized, "Invalid token.");
         return;
     }
+    std::cout << "Token OK" << std::endl;
 
-    // Gets difficulty and player values.
-    Value& difficultyValue = doc["difficulty"];
-    Value& playerValue = doc["player"];
+    // Get difficulty and player values.
+    auto optionalDifficulty = query.get("difficulty");
+    auto optionalPlayer = query.get("player");
+    if (optionalDifficulty.isEmpty() || optionalPlayer.isEmpty()) {
+        response.send(Code::Bad_Request, "Difficulty or player is empty.");
+        return;
+    }
+    string difficultyStr = optionalDifficulty.get();
+    std::cout << "Difficulty : " << difficultyStr << std::endl;
+    string playerStr = optionalPlayer.get();
+    std::cout << "Player : " << playerStr << std::endl;
     try {
-        Difficulty difficulty = Difficulty::getFromString(difficultyValue.GetString());
-        Player player = Player::getFromString(playerValue.GetString());
+        Difficulty difficulty = Difficulty::getFromString(difficultyStr);
+        Player player = Player::getFromString(playerStr);
         // Indicates a new game to the system.
         m_beach.newGameStarted(difficulty, player);
     } catch (string& exc) {
@@ -89,53 +101,62 @@ void AIHandler::gameStartPost(const Request &request, ResponseWriter response) {
 /**
  * Asks a new move to the system.
  */
-void AIHandler::gamePlayPost(const Request &request, ResponseWriter response) {
+void AIHandler::gamePlayGet(const Request &request, ResponseWriter response) {
+    std::cout << "Game play request received." << std::endl;
     // Gets and checks the gameID.
     auto gameID = request.param(":gameid").as<string>();
+    std::cout << "GameID : " << gameID << std::endl;
     if (!m_beach.isKnownGameID(gameID)) {
         response.send(Code::Bad_Request, "Invalid gameID.");
         return;
     }
+    std::cout << "Known gameID." << std::endl;
 
-    // Gets and parses the body of the request.
-    string body = request.body();
-    Document doc;
-    doc.Parse(body.c_str());
 
-    // We need a token, a difficulty, a player and a board.
-    if (!doc.HasMember("token") || !doc.HasMember("difficulty")
-        || !doc.HasMember("player") || !doc.HasMember("board")) {
-        response.send(Code::Bad_Request, "Invalid arguments.");
+
+
+    auto query = request.query();
+    // Get and check token.
+    auto optionalToken = query.get("token");
+    if (optionalToken.isEmpty()) {
+        response.send(Code::Bad_Request, "Token is empty.");
         return;
     }
-
-    // Is token the correct one ?
-    Value& tokenValue = doc["token"];
-    if (!m_beach.isGoodToken(tokenValue.GetString())) {
+    string token = optionalToken.get();
+    std::cout << "Token asked : " << token << std::endl;
+    if (!m_beach.isGoodToken(token)) {
         response.send(Code::Unauthorized, "Invalid token.");
         return;
     }
+    std::cout << "Token OK" << std::endl;
 
-    // Gets difficulty, player and board values.
-    Value& difficultyValue = doc["difficulty"];
-    Value& playerValue = doc["player"];
-    Value& boardValue = doc["board"];
+    // Get difficulty, board and player values.
+    auto optionalDifficulty = query.get("difficulty");
+    auto optionalPlayer = query.get("player");
+    auto optionalBoard = query.get("board");
+    if (optionalDifficulty.isEmpty() || optionalPlayer.isEmpty() || optionalBoard.isEmpty()) {
+        response.send(Code::Bad_Request, "Difficulty, board or player is empty.");
+        return;
+    }
+    string difficultyStr = optionalDifficulty.get();
+    std::cout << "Difficulty : " << difficultyStr << std::endl;
+    string playerStr = optionalPlayer.get();
+    std::cout << "Player : " << playerStr << std::endl;
+    string boardStr = optionalBoard.get();
+    // Check board size.
+    if (boardStr.size() != 50) {
+        response.send(Code::Bad_Request, "Board isn't 50 char long.");
+        return;
+    }
+
     try {
-        Difficulty difficulty = Difficulty::getFromString(difficultyValue.GetString());
-        Player player = Player::getFromString(playerValue.GetString());
+        Difficulty difficulty = Difficulty::getFromString(difficultyStr);
+        Player player = Player::getFromString(playerStr);
 
-        auto boardArray = boardValue.GetArray();
         // We will fill an array to represent the board.
         vector<BoardSquareType> board;
-        for (auto it = boardArray.Begin(); it != boardArray.End(); ++it) {
-            string s = it->GetString();
-            board.push_back(BoardSquareType::getFromChar(s[0]));
-        }
-
-        // Board is not of good size (50).
-        if (board.size() != 50) {
-            response.send(Code::Bad_Request, "Board of incorrect size.");
-            return;
+        for (char& c : boardStr) {
+            board.push_back(BoardSquareType::getFromChar(c));
         }
 
         // Gets the move from the system.
@@ -155,39 +176,46 @@ void AIHandler::gamePlayPost(const Request &request, ResponseWriter response) {
 /**
  * Indicates end of a game to the system.
  */
-void AIHandler::gameEndPost(const Request &request, ResponseWriter response) {
+void AIHandler::gameEndGet(const Request &request, ResponseWriter response) {
+    std::cout << "Game end request received." << std::endl;
     // Gets and checks the gameID.
     auto gameID = request.param(":gameid").as<string>();
+    std::cout << "GameID : " << gameID << std::endl;
     if (!m_beach.isKnownGameID(gameID)) {
         response.send(Code::Bad_Request, "Invalid gameID.");
         return;
     }
+    std::cout << "Known gameID." << std::endl;
 
-    // Gets and parses the body of the request.
-    string body = request.body();
-    Document doc;
-    doc.Parse(body.c_str());
-
-    // We need a token, a winner and a end code.
-    if (!doc.HasMember("token") || !doc.HasMember("winner")
-        || !doc.HasMember("code")) {
-        response.send(Code::Bad_Request, "invalid argument");
+    auto query = request.query();
+    // Get and check token.
+    auto optionalToken = query.get("token");
+    if (optionalToken.isEmpty()) {
+        response.send(Code::Bad_Request, "Token is empty.");
         return;
     }
-
-    // Is token the correct one ?
-    Value& tokenValue = doc["token"];
-    if (!m_beach.isGoodToken(tokenValue.GetString())) {
-        response.send(Code::Unauthorized, "invalid token");
+    string token = optionalToken.get();
+    std::cout << "Token asked : " << token << std::endl;
+    if (!m_beach.isGoodToken(token)) {
+        response.send(Code::Unauthorized, "Invalid token.");
         return;
     }
+    std::cout << "Token OK" << std::endl;
 
-    // Gets winner and end code values.
-    Value& winnerValue = doc["winner"];
-    Value& codeValue = doc["code"];
+    // Get winner and code values.
+    auto optionalWinner = query.get("winner");
+    auto optionalCode = query.get("code");
+    if (optionalWinner.isEmpty() || optionalCode.isEmpty()) {
+        response.send(Code::Bad_Request, "Winner or code is empty.");
+        return;
+    }
+    string winnerStr = optionalWinner.get();
+    std::cout << "Winner : " << winnerStr << std::endl;
+    string codeStr = optionalCode.get();
+    std::cout << "Code : " << codeStr << std::endl;
     try {
-        Player winner = Player::getFromString(winnerValue.GetString());
-        CodeEndGame codeEndGame = CodeEndGame::getFromString(codeValue.GetString());
+        Player winner = Player::getFromString(winnerStr);
+        CodeEndGame codeEndGame = CodeEndGame::getFromString(codeStr);
         // Indicates to the system that a game ended.
         m_beach.gameEnded(gameID, winner, codeEndGame);
     } catch (string& exc) {
