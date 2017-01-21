@@ -2,8 +2,8 @@
 
 namespace Domain {
     namespace Enumeration {
-        const Difficulty Difficulty::EASY = Difficulty("easy");
-        const Difficulty Difficulty::MEDIUM = Difficulty("medium");
-        const Difficulty Difficulty::HARD = Difficulty("hard");
+        const Difficulty Difficulty::EASY = Difficulty("EASY");
+        const Difficulty Difficulty::MEDIUM = Difficulty("MEDIUM");
+        const Difficulty Difficulty::HARD = Difficulty("HARD");
     }
 }

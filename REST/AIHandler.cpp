@@ -41,6 +41,7 @@ void AIHandler::statusPost(const Request &request, ResponseWriter response) {
 
     // Returns the status.
     StatusDTO statusDTO(m_beach.getState(), m_beach.getToken());
+    response.setMime(MIME(Application, Json));
     response.send(Code::Ok, statusDTO.toJSON());
 }
 
@@ -81,6 +82,7 @@ void AIHandler::gameStartPost(const Request &request, ResponseWriter response) {
 
     // Returns the response : the status, the token and a new gameID.
     NewGameDTO newGameDTO(m_beach.getState(), m_beach.getToken(), m_beach.getGameID());
+    response.setMime(MIME(Application, Json));
     response.send(Code::Ok, newGameDTO.toJSON());
 }
 
@@ -142,6 +144,7 @@ void AIHandler::gamePlayPost(const Request &request, ResponseWriter response) {
 
         // Returns the move.
         MoveDTO moveDTO(m_beach.getToken(), difficulty, player, responseBoard);
+        response.setMime(MIME(Application, Json));
         response.send(Code::Ok, moveDTO.toJSON());
     } catch (string& exc) {
         response.send(Code::Internal_Server_Error, exc);
@@ -194,5 +197,6 @@ void AIHandler::gameEndPost(const Request &request, ResponseWriter response) {
 
     // Returns the new status of the system.
     StatusDTO statusDTO(m_beach.getState(), m_beach.getToken());
+    response.setMime(MIME(Application, Json));
     response.send(Code::Ok, statusDTO.toJSON());
 }

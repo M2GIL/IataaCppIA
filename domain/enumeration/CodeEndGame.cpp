@@ -2,8 +2,8 @@
 
 namespace Domain {
     namespace Enumeration {
-        const CodeEndGame CodeEndGame::TIMEOUT = CodeEndGame("timeout");
-        const CodeEndGame CodeEndGame::SURRENDER = CodeEndGame("surrender");
-        const CodeEndGame CodeEndGame::CLASSICAL = CodeEndGame("classical");
+        const CodeEndGame CodeEndGame::TIMEOUT = CodeEndGame("TIMEOUT");
+        const CodeEndGame CodeEndGame::SURRENDER = CodeEndGame("SURRENDER");
+        const CodeEndGame CodeEndGame::CLASSICAL = CodeEndGame("CLASSICAL");
     }
 }
